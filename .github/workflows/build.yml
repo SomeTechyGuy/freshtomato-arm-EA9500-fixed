@@ -1,0 +1,70 @@
+name: Build FreshTomato ea9400-128e
+
+on:
+  push:
+    branches: [ "**" ]
+  pull_request:
+    branches: [ "**" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build ea9400-128e firmware
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # nss_wrapper must be executable — git may not preserve the bit
+      - name: Ensure nss_wrapper is executable
+        run: chmod +x docker/nss_wrapper
+
+      - name: Set image tag
+        id: meta
+        run: echo "tag=freshtomato:${{ github.sha }}" >> "$GITHUB_OUTPUT"
+
+      # Cache Docker layers so the heavy apt-get layer isn't re-downloaded
+      # on every push unless Dockerfile or nss_wrapper actually changes
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Cache Docker layers
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ hashFiles('docker/Dockerfile', 'docker/nss_wrapper') }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./docker
+          file: ./docker/Dockerfile
+          load: true
+          tags: ${{ steps.meta.outputs.tag }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to:   type=local,dest=/tmp/.buildx-cache-new,mode=max
+
+      - name: Rotate build cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+      - name: Build ea9400-128e firmware
+        run: |
+          docker run --rm \
+            -v "${{ github.workspace }}":/ws \
+            --user "$(id -u):$(id -g)" \
+            ${{ steps.meta.outputs.tag }} \
+            make -C /ws/release/src-rt-7.14.114.x/src ea9400-128e
+      # Upload the firmware artifact so it can be downloaded from the
+      # Actions run page — adjust the glob below if output lands elsewhere
+      - name: Upload firmware artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ea9400-128e-${{ github.sha }}
+          path: |
+            release/src-rt-7.14.114.x/src/image/*.trx
+            release/src-rt-7.14.114.x/src/image/*.bin
+          if-no-files-found: warn
+          retention-days: 30
