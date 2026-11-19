@@ -1,5 +1,7 @@
 # **FreshTomato-ARM-EA9500-fixed** #
 
+# I'm too lazy to update the freshtomato code here and vibecode until the vibecoded mess is unbroken from it, so this firmware is vulnerable to [php2shell](https://www.php2shell.com/), YOU ARE STUPID IF YOU CONNECT THIS TO THE INTERNET.
+
 # This port has TONS of bugs and you MUST have UART access to your router to set dhd24=1 in the nvram FROM CFE OR ELSE YOUR ROUTER IS BRICKED, YOU WILL BRICK YOUR ROUTER EVEN IF YOU HAVE A BACKUP FIRMWARE ON THE OTHER PARTITION
 
 ### you must run WITH UART (I DONT CARE WHAT THE AI SAYS) ```ifconfig vlan1 add 192.168.1.1 netmask 255.255.255.0``` in freshtomato to make the network function
