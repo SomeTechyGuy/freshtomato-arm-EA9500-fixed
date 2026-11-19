@@ -2,14 +2,16 @@
 
 # I'm too lazy to update the freshtomato code here and vibecode until the vibecoded mess is unbroken from it, so this firmware is vulnerable to [php2shell](https://www.php2shell.com/), YOU ARE STUPID IF YOU CONNECT THIS TO THE INTERNET.
 
-# This port has TONS of bugs and you MUST have UART access to your router to set dhd24=1 in the nvram FROM CFE OR ELSE YOUR ROUTER IS BRICKED, YOU WILL BRICK YOUR ROUTER EVEN IF YOU HAVE A BACKUP FIRMWARE ON THE OTHER PARTITION
+## this readme is stupid because I have gotten tired of seeing AI generated writing in vibecoded stuff, human is so much better, and this readme should repersent the code well (because just like my broken brain writing, ai has broken all the code, i think)
+
+## The patches in this firmware are made with AI, I don't have any programming knowledge to do this myself.
+
+## This port has TONS of bugs and you MUST have UART access to your router to set dhd24=1 in the nvram FROM CFE OR ELSE YOUR ROUTER IS BRICKED, YOU WILL BRICK YOUR ROUTER EVEN IF YOU HAVE A BACKUP FIRMWARE ON THE OTHER PARTITION
 
 ### you must run WITH UART (I DONT CARE WHAT THE AI SAYS) ```ifconfig vlan1 add 192.168.1.1 netmask 255.255.255.0``` in freshtomato to make the network function
 
 ### if you need to tftp flash something in cfe, use ethernet port 8, no other port works for some reason
 
-# if this damages your router or mental health (due to trauma because you tried to make this stupid thing work), I'm not responsible.
-
-## The patches in this firmware are made with AI, I don't have any programming knowledge to do this myself.
+### if this damages your router or mental health (due to trauma because you tried to make this stupid thing work), I'm not responsible.
   
 ***Disclaimer: I am not responsible for any bricked routers, nor do I encourage other people to flash alternative firmwares on their routers. Use at your own risk!***  
